@@ -3,7 +3,7 @@
   <OnLoaded>
     <DefineVariable Name="GameScore"/>
     <DefineVariable Name="PlayerLives"/>
-    <SetAppState State="Title"/>
+    <SetAppState State="Playing"/>
   </OnLoaded>
   <States>
     <AppState Name="Title" CollisionsEnabled="0">
@@ -27,6 +27,7 @@ PlayerLives = 3;
 App.Caption = "Playing";]]>
           </Expression>
         </ZExpression>
+        <SpawnModel Model="PlayerModel" Position="0 -4 0"/>
       </OnStart>
     </AppState>
   </States>
@@ -39,7 +40,44 @@ App.Caption = "Playing";]]>
   </OnRender>
   <Content>
     <Material Name="BaseMaterial"/>
-    <Group Name="Player"/>
+    <Group Name="Player">
+      <Children>
+        <Mesh Name="PlayerBody">
+          <Producers>
+            <MeshBox Scale="0.75 0.75 0.5"/>
+          </Producers>
+        </Mesh>
+        <Model Name="PlayerModel" Rotation="0 0 0.125">
+          <Definitions>
+            <DefineVariable Name="PlayerSpeed"/>
+          </Definitions>
+          <OnRender>
+            <UseMaterial Material="PlayerMaterial"/>
+            <RenderSetColor Color="0.502 0.502 0.502 1"/>
+            <RenderMesh Mesh="PlayerBody"/>
+          </OnRender>
+          <OnUpdate>
+            <ZExpression Expression="CurrentModel.Velocity.X = 0;"/>
+            <KeyPress Keys="&gt;">
+              <OnPressed>
+                <ZExpression Expression="CurrentModel.Velocity.X = PlayerSpeed;"/>
+              </OnPressed>
+            </KeyPress>
+            <KeyPress Keys="&lt;">
+              <OnPressed>
+                <ZExpression Expression="CurrentModel.Velocity.X = PlayerSpeed * -1;"/>
+              </OnPressed>
+            </KeyPress>
+            <ZExpression Name="RestrictMovement" Expression="CurrentModel.Position.X = clamp(CurrentModel.Position.X, -5, 5);"/>
+          </OnUpdate>
+          <OnSpawn>
+            <ZExpression Expression="PlayerSpeed = 10;"/>
+          </OnSpawn>
+        </Model>
+        <Material Name="PlayerMaterial"/>
+      </Children>
+    </Group> <!-- Player -->
+
     <Group Name="Candy"/>
   </Content>
 </ZApplication>
