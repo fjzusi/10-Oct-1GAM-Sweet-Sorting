@@ -1,2 +1,45 @@
 <?xml version="1.0" encoding="iso-8859-1" ?>
-<ZApplication Name="App" Caption="ZGameEditor application"/>
+<ZApplication Name="App" Caption="ZGameEditor application" NoSound="1">
+  <OnLoaded>
+    <DefineVariable Name="GameScore"/>
+    <DefineVariable Name="PlayerLives"/>
+    <SetAppState State="Title"/>
+  </OnLoaded>
+  <States>
+    <AppState Name="Title" CollisionsEnabled="0">
+      <OnStart>
+        <ZExpression Expression="App.Caption = &quot;Title&quot;;"/>
+      </OnStart>
+      <OnUpdate>
+        <KeyPress Comment="Press Space to Continue" Keys=" ">
+          <OnPressed>
+            <SetAppState State="Playing"/>
+          </OnPressed>
+        </KeyPress>
+      </OnUpdate>
+    </AppState>
+    <AppState Name="Playing">
+      <OnStart>
+        <ZExpression Comment="VariableInitialize">
+          <Expression>
+<![CDATA[GameScore = 0;
+PlayerLives = 3;
+App.Caption = "Playing";]]>
+          </Expression>
+        </ZExpression>
+      </OnStart>
+    </AppState>
+  </States>
+  <OnRender>
+    <UseMaterial Material="BaseMaterial"/>
+    <RenderSetColor Color="1 0 0 1"/>
+    <RenderText Text="Score:" TextFloatRef="GameScore Value" X="-0.95" Y="0.95" Scale="0.5" Align="1"/>
+    <RenderSetColor Color="1 1 0 1"/>
+    <RenderText Text="Lives:" TextFloatRef="PlayerLives Value" X="0.6" Y="0.95" Scale="0.5" Align="1"/>
+  </OnRender>
+  <Content>
+    <Material Name="BaseMaterial"/>
+    <Group Name="Player"/>
+    <Group Name="Candy"/>
+  </Content>
+</ZApplication>
