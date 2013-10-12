@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="iso-8859-1" ?>
-<ZApplication Name="App" Caption="ZGameEditor application" NoSound="1">
+<ZApplication Name="App" Caption="ZGameEditor application" ClearColor="0 1 1 1" NoSound="1">
   <OnLoaded>
     <DefineVariable Name="GameScore"/>
     <DefineVariable Name="PlayerLives"/>
