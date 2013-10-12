@@ -3,7 +3,10 @@
   <OnLoaded>
     <DefineVariable Name="GameScore"/>
     <DefineVariable Name="PlayerLives"/>
-    <SetAppState State="Playing"/>
+    <DefineVariable Name="PlayerPosition"/>
+    <DefineVariable Name="CandyTimer"/>
+    <DefineVariable Name="CandySwitch"/>
+    <SetAppState State="Title"/>
   </OnLoaded>
   <States>
     <AppState Name="Title" CollisionsEnabled="0">
@@ -17,6 +20,11 @@
           </OnPressed>
         </KeyPress>
       </OnUpdate>
+      <OnRender>
+        <UseMaterial Material="BaseMaterial"/>
+        <RenderSetColor Color="1 0 0.502 1"/>
+        <RenderText Text="Sweet Sorting"/>
+      </OnRender>
     </AppState>
     <AppState Name="Playing">
       <OnStart>
@@ -29,6 +37,29 @@ App.Caption = "Playing";]]>
         </ZExpression>
         <SpawnModel Model="PlayerModel" Position="0 -4 0"/>
       </OnStart>
+      <OnUpdate>
+        <ZExpression Expression="CandyTimer = CandyTimer - App.DeltaTime;"/>
+        <Condition Comment="Spawn Timer" Expression="return CandyTimer &lt;= 0;">
+          <OnTrue>
+            <ZExpression Comment="CandySwitch Set" Expression="CandySwitch = random(50, 50);"/>
+            <Condition Comment="CandySwitch Check" Expression="return CandySwitch &lt; 50;">
+              <OnTrue>
+                <SpawnModel Model="CandyLeft" Position="0 6 0"/>
+              </OnTrue>
+              <OnFalse>
+                <SpawnModel Model="CandyRight" Position="0 6 0"/>
+              </OnFalse>
+            </Condition>
+            <ZExpression Comment="Timer Reset" Expression="CandyTimer = random(2, 1.5);"/>
+          </OnTrue>
+        </Condition>
+        <Condition Comment="Game Over" Expression="return PlayerLives &lt;= 0;">
+          <OnTrue>
+            <RemoveAllModels/>
+            <SetAppState State="Title"/>
+          </OnTrue>
+        </Condition>
+      </OnUpdate>
     </AppState>
   </States>
   <OnRender>
@@ -68,7 +99,12 @@ App.Caption = "Playing";]]>
                 <ZExpression Expression="CurrentModel.Velocity.X = PlayerSpeed * -1;"/>
               </OnPressed>
             </KeyPress>
-            <ZExpression Name="RestrictMovement" Expression="CurrentModel.Position.X = clamp(CurrentModel.Position.X, -5, 5);"/>
+            <ZExpression Name="RestrictMovement">
+              <Expression>
+<![CDATA[CurrentModel.Position.X = clamp(CurrentModel.Position.X, -5, 5);
+PlayerPosition = CurrentModel.Position.X;]]>
+              </Expression>
+            </ZExpression>
           </OnUpdate>
           <OnSpawn>
             <ZExpression Expression="PlayerSpeed = 10;"/>
@@ -80,12 +116,71 @@ App.Caption = "Playing";]]>
 
     <Group Name="Candy">
       <Children>
-        <Mesh Name="CandyBody">
+        <Model Name="CandyLeft">
+          <OnRender>
+            <RenderSetColor Color="1 0 0 1"/>
+            <RenderMesh Mesh="CandyMesh"/>
+          </OnRender>
+          <OnUpdate>
+            <Condition Expression=" return CurrentModel.Position.Y &lt; -5;">
+              <OnTrue>
+                <ZExpression>
+                  <Expression>
+<![CDATA[if(CurrentModel.Position.X > PlayerPosition) {
+  PlayerLives = PlayerLives - 1;
+} else {
+  GameScore = GameScore + 1;
+}]]>
+                  </Expression>
+                </ZExpression>
+                <RemoveModel/>
+              </OnTrue>
+            </Condition>
+          </OnUpdate>
+          <OnSpawn>
+            <ZExpression>
+              <Expression>
+<![CDATA[CurrentModel.Position.X = random(0, 4);
+CurrentModel.Velocity.Y = -7;]]>
+              </Expression>
+            </ZExpression>
+          </OnSpawn>
+        </Model>
+        <Mesh Name="CandyMesh">
           <Producers>
-            <MeshSphere ZSamples="15" RadialSamples="15"/>
+            <MeshSphere Scale="0.7 0.7 0.7" ZSamples="15" RadialSamples="15"/>
           </Producers>
         </Mesh>
-        <Mesh Name="CandyWrapper"/>
+        <Model Name="CandyRight">
+          <OnRender>
+            <RenderSetColor Color="0 0 1 1"/>
+            <RenderMesh Mesh="CandyMesh"/>
+          </OnRender>
+          <OnUpdate>
+            <Condition Expression=" return CurrentModel.Position.Y &lt; -5;">
+              <OnTrue>
+                <ZExpression>
+                  <Expression>
+<![CDATA[if(CurrentModel.Position.X < PlayerPosition) {
+  PlayerLives = PlayerLives - 1;
+} else {
+  GameScore = GameScore + 1;
+}]]>
+                  </Expression>
+                </ZExpression>
+                <RemoveModel/>
+              </OnTrue>
+            </Condition>
+          </OnUpdate>
+          <OnSpawn>
+            <ZExpression>
+              <Expression>
+<![CDATA[CurrentModel.Position.X = random(0, 4);
+CurrentModel.Velocity.Y = -7;]]>
+              </Expression>
+            </ZExpression>
+          </OnSpawn>
+        </Model>
       </Children>
     </Group> <!-- Candy -->
 
