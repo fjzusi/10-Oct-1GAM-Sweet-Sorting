@@ -33,13 +33,13 @@ App.Caption = "Playing";]]>
   </States>
   <OnRender>
     <UseMaterial Material="BaseMaterial"/>
-    <RenderSetColor Color="1 0 0 1"/>
+    <RenderSetColor Color="0.502 0 0 1"/>
     <RenderText Text="Score:" TextFloatRef="GameScore Value" X="-0.95" Y="0.95" Scale="0.5" Align="1"/>
-    <RenderSetColor Color="1 1 0 1"/>
+    <RenderSetColor Color="0 0.502 0 1"/>
     <RenderText Text="Lives:" TextFloatRef="PlayerLives Value" X="0.6" Y="0.95" Scale="0.5" Align="1"/>
   </OnRender>
   <Content>
-    <Material Name="BaseMaterial"/>
+    <Material Name="BaseMaterial" Blend="1"/>
     <Group Name="Player">
       <Children>
         <Mesh Name="PlayerBody">
