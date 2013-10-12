@@ -78,6 +78,16 @@ App.Caption = "Playing";]]>
       </Children>
     </Group> <!-- Player -->
 
-    <Group Name="Candy"/>
+    <Group Name="Candy">
+      <Children>
+        <Mesh Name="CandyBody">
+          <Producers>
+            <MeshSphere ZSamples="15" RadialSamples="15"/>
+          </Producers>
+        </Mesh>
+        <Mesh Name="CandyWrapper"/>
+      </Children>
+    </Group> <!-- Candy -->
+
   </Content>
 </ZApplication>
