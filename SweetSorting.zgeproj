@@ -35,7 +35,7 @@ PlayerLives = 3;
 App.Caption = "Playing";]]>
           </Expression>
         </ZExpression>
-        <SpawnModel Model="PlayerModel" Position="0 -4 0"/>
+        <SpawnModel Model="PlayerModel" Position="0 -5 0"/>
       </OnStart>
       <OnUpdate>
         <ZExpression Expression="CandyTimer = CandyTimer - App.DeltaTime;"/>
@@ -60,6 +60,13 @@ App.Caption = "Playing";]]>
           </OnTrue>
         </Condition>
       </OnUpdate>
+      <OnRender>
+        <UseMaterial Material="BaseMaterial"/>
+        <RenderSetColor Color="1 0 0 1"/>
+        <RenderText Text="Red" X="-0.75" Y="0.6"/>
+        <RenderSetColor Color="0 0 1 1"/>
+        <RenderText Text="Blue" X="0.75" Y="0.6"/>
+      </OnRender>
     </AppState>
   </States>
   <OnRender>
@@ -78,7 +85,7 @@ App.Caption = "Playing";]]>
             <MeshBox Scale="0.75 0.75 0.5"/>
           </Producers>
         </Mesh>
-        <Model Name="PlayerModel" Rotation="0 0 0.125">
+        <Model Name="PlayerModel" Rotation="0 0 0.125" Scale="2 2 1">
           <Definitions>
             <DefineVariable Name="PlayerSpeed"/>
           </Definitions>
